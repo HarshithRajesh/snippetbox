@@ -13,14 +13,7 @@ import (
 	"github.com/HarshithRajesh/snippetbox/pkg/models/postgresql"
 	_ "github.com/lib/pq"
 	"github.com/golangcollege/sessions"
-)
-
-const (
-	host     = "aws-0-ap-south-1.pooler.supabase.com"
-	port     = 5432
-	user     = "postgres.infcvrwbrtebxdhsqkas"
-	password = "snippetbox@123"
-	dbname   = "postgres"
+	"github.com/joho/godotenv"
 )
 
 type application struct {
@@ -34,6 +27,7 @@ type application struct {
 
 func main() {
 
+	
 	addr := flag.String("addr", ":4000", "Http network address")
 
 	secret := flag.String("secret", "s6Ndh+pPbnzHbS*+9Pk8qGWhTzbpa@ge", "Secret key")
@@ -76,7 +70,18 @@ func main() {
 }
 
 func openDB() (*sql.DB, error) {
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+	err := godotenv.Load()
+    if err != nil {
+        fmt.Println("Error loading .env file")
+        
+    }
+	log.Println("Reached")
+    host := os.Getenv("HOST")
+    port := os.Getenv("PORT")
+	user := os.Getenv("USERDB")
+    password := os.Getenv("PASSWORD")
+	dbname := os.Getenv("DBNAME")
+	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
 
