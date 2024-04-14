@@ -11,9 +11,9 @@ import (
 	"time"
 
 	"github.com/HarshithRajesh/snippetbox/pkg/models/postgresql"
-	_ "github.com/lib/pq"
 	"github.com/golangcollege/sessions"
 	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 )
 
 type application struct {
@@ -21,13 +21,13 @@ type application struct {
 	infoLog       *log.Logger
 	errorLog      *log.Logger
 	snippets      *postgresql.SnippetModel
+	users         *postgresql.UserModel
 	session       *sessions.Session
 	templateCache map[string]*template.Template
 }
 
 func main() {
 
-	
 	addr := flag.String("addr", ":4000", "Http network address")
 
 	secret := flag.String("secret", "s6Ndh+pPbnzHbS*+9Pk8qGWhTzbpa@ge", "Secret key")
@@ -55,6 +55,7 @@ func main() {
 		infoLog:       infoLog,
 		session:       session,
 		snippets:      &postgresql.SnippetModel{DB: db},
+		users:         &postgresql.UserModel{DB: db},
 		templateCache: templateCache,
 	}
 
@@ -71,15 +72,15 @@ func main() {
 
 func openDB() (*sql.DB, error) {
 	err := godotenv.Load()
-    if err != nil {
-        fmt.Println("Error loading .env file")
-        
-    }
+	if err != nil {
+		fmt.Println("Error loading .env file")
+
+	}
 	log.Println("Reached")
-    host := os.Getenv("HOST")
-    port := os.Getenv("PORT")
+	host := os.Getenv("HOST")
+	port := os.Getenv("PORT")
 	user := os.Getenv("USERDB")
-    password := os.Getenv("PASSWORD")
+	password := os.Getenv("PASSWORD")
 	dbname := os.Getenv("DBNAME")
 	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+
 		"password=%s dbname=%s sslmode=disable",
